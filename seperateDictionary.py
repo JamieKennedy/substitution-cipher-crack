@@ -1,5 +1,3 @@
-
-
 def main():
     wordsSep = {}
     with open("dicts/dictionaryAll.txt") as dictionary:
