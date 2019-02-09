@@ -19,7 +19,7 @@ def main(dirName):
 
 
 def writeJson(fileName, data):
-    file = open("jsonDicts/" + [fileName.split(".")][0][0] + ".json", "w")
+    file = open("jsonDicts/" + fileName.split(".")[0] + ".json", "w")
     file.write(json.dumps(data))
     file.close()
 
@@ -55,8 +55,8 @@ def getPattern(word):
             count += 1
         else:
             pattern += str(seenLetter.index(char))
-
-    return pattern
+        pattern += "."
+    return pattern[:-1]
 
 
 main("dicts")

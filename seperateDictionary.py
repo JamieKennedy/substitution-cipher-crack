@@ -1,6 +1,6 @@
 def main():
     wordsSep = {}
-    with open("dicts/dictionaryAll.txt") as dictionary:
+    with open("dictionary.txt") as dictionary:
         words = dictionary.readlines()
 
     for word in words:
