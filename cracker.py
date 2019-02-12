@@ -1,11 +1,10 @@
 import json
-from re import sub
+import encoder
 
 
-def main():
+def crack(cipher):
     englishPatterns = {}
     key = initMap()
-    cipher = "uwqlhkvwyleq zsubxcmj hem xjm kf uksumybmc imjjyvmj uzlemwj ysc ukcmj, zhj lxwlkjm amzsv hk ybhmw hem fkwi kf y imjjyvm kw ukiixszuyhzks zs jxue y nyq heyh zh zj zshmbbzvzabm ksbq hk hem lmwjks lkjjmjjzsv hem gmq, uwqlhysybjzj zj hem awmygzsv kf hem ukcmj kw uzlemw nzhekxh hem gmq hmueszuybbq hemwm zj y jxahbm czffmwmsum amhnmms ukcmj ysc uzlemwj y ukcm zj ayjmc ks ukilbmhm ukilbmhm nkwcj kw lewyjmj nemwm ybb hem nkwcj ywm wmlbyumc aq ukcm nkwcj kw sxiamwj ysc y ukcm akkg zj smmcmc zs kwcmw fkw y imjjyvm hk am jmsh kw wmyc y uzlemw ks hem khemw eysc xjmj jzsvbm bmhhmwj nezue ywm mzhemw dxiabmc xl kw wmlbyumc aq khemw bmhhmw sxiamwj kw jqiakbj kfhms eknmomw hem ikwm fyizbzyw nkwc ukcm zj xjmc hk imys mzhemw y ukcm kw uzlemw"
     cleanCipher = cleanCipherText(cipher)
     wordList = cleanCipher.lower().split(" ")
     lengths = countLengths(wordList)
@@ -33,13 +32,32 @@ def main():
                     if letter not in wordMap[word[i]]:
                         wordMap[word[i]].append(letter)
 
-
         intersect(key, wordMap)
-        #print(key)
         cleanUp(key)
+    fillInEmpty(key)
+    return key
 
-    for letter in key:
-        print(letter + ": " + str(key[letter]))
+
+def fillInEmpty(keyMap):
+    definite = getDefinite(keyMap)
+    alphabet = list("abcdefghijklmnopqrstuvwxyz")
+
+    for char in definite:
+        alphabet.remove(char)
+
+    for key in keyMap:
+        if not keyMap[key]:
+            keyMap[key] = alphabet
+
+
+def getDefinite(keyMap):
+    definite = []
+
+    for key in keyMap:
+        if len(keyMap[key]) == 1:
+            definite.append(keyMap[key][0])
+
+    return definite
 
 
 def cleanCipherText(cipher):
@@ -123,4 +141,19 @@ def readJson(fileName):
     jsonData = open("jsonDicts/" + fileName + ".json").read()
     return json.loads(jsonData)
 
-main()
+
+def readFile(fileName):
+    with open(fileName) as file:
+        lines = [line.rstrip() for line in file]
+
+    return lines
+
+
+if __name__ == "__main__":
+    text = readFile("ciphers.txt")[1]
+    encoded = encoder.encoder(text)
+    key = encoded["key"]
+    plainText = encoded["plain"]
+    cipher = encoded["cipher"]
+
+    keyMap = crack(text)
