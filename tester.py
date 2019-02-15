@@ -69,7 +69,6 @@ def getInitGuess(keyMap):
     print("hi")
 
 
-
 def getUnfound(keyMap):
     found = []
     unfound = []
